@@ -1,20 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { StyleSheet, StatusBar, View, Button } from 'react-native';
 
-export default function App() {
+import { useFetchProducts } from './src/hooks/use-fetch-products';
+import { ModalLoader } from './src/components/modal';
+import { ProductList } from './src/components/products';
+
+const App = () => {
+  const { products, isLoading, onLoadFromApi } = useFetchProducts();
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <View style={styles.buttons}>
+        <Button title="Загрузить из API" onPress={onLoadFromApi} />
+        <Button title="Загрузить из файла" />
+      </View>
+      {products.length > 0 && <ProductList products={products} />}
+      <ModalLoader visible={isLoading} />
+      <StatusBar />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
+    padding: 24,
+  },
+  buttons: {
+    display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'center',
+    gap: 12,
+    marginBottom: 24,
   },
 });
+
+export default App;
